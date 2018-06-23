@@ -56,7 +56,6 @@ func twr(d, gr, mr, cda float64, cp func(float64) float64) float64 {
 		tm = (th + tl) / 2.0
 	}
 
-	print(tm)
 	return tm
 }
 
