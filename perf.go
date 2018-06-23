@@ -1,7 +1,9 @@
 package perf
 
 import (
-	_ "github.com/scheibo/calc" // nolint
+	"math"
+
+	"github.com/scheibo/calc"
 )
 
 const mb = 8.0
@@ -9,31 +11,53 @@ const mb = 8.0
 const mrM = 67.0
 const mrF = 53.0
 
-const cdaM = 0.325
-const cdaF = 0.325 // TODO scale!
+const cdaM = 0.325 // 1.85m
+const cdaF = 0.293 // 1.67m
 
-// CalcM calculates the PERF score for a performance on a climb of distance d
-// in metres and gradient gr (rise/run) for a male rider.
-func CalcM(d, gr float64) float64 {
-	_ = power(d, gr, mrM, cdaM)
-	_ = cpM(0)
-	return 0
+// CalcM calculates the PERF score for a performance of duration t on a climb
+// of distance d in metres and gradient gr (rise/run) for a male rider.
+func CalcM(t, d, gr float64) float64 {
+	return score(t, twr(d, gr, mrM, cdaM, cpM))
 }
 
-// CalcF calculates the PERF score for a performance on a climb of distance d
-// in metres and gradient gr (rise/run) for a female rider.
-func CalcF(d, gr float64) float64 {
-	_ = power(d, gr, mrF, cdaF)
-	return 0
+// CalcF calculates the PERF score for a performance of duration t on a climb
+// of distance d in metres and gradient gr (rise/run) for a female rider.
+func CalcF(t, d, gr float64) float64 {
+	return score(t, twr(d, gr, mrF, cdaF, cpF))
 }
 
-// TODO need the formula for time, not power!
-func power(d, gr, mr, cda float64) float64 {
-	_, _, _, _, _ = d, gr, mr, mb, cda
-	_ = cpF(0)
-	// NOTE: if vgi = vgf, Pke = 0, so we can set whatever we want for ti and tf provided tf - ti != 0
-	//return calc.Ptot(calc.Rho0, cda, calc.Crr, va, vg, gr, mr + mb, calc.R, vg, vg, 0, 1, calc.G, calc.Ec, calc.Fw, calc.I)
-	return 0
+func score(t, wr float64) float64 {
+	return 1000 * math.Pow(wr/t, 3)
+}
+
+func twr(d, gr, mr, cda float64, cp func(float64) float64) float64 {
+	// epsilon is some small value that determines when we will stop the search
+	const epsilon = 1e-6
+	// max is the maxmium number of iterations of the search
+	const max = 100
+
+	mt := mr + mb
+	tl, tm, th := 0.0, 3600.0, 7200.0
+	for j := 0; j < max; j++ {
+		vg := d / tm
+		p1 := calc.Psimp(calc.Rho0, cda, calc.Crr, vg, vg, gr, mt, calc.G, calc.Ec, calc.Fw)
+		p2 := cp(tm)
+
+		if calc.Eqf(p1, p2, epsilon) {
+			break
+		}
+
+		if p1 > p2 {
+			tl = tm
+		} else {
+			th = tm
+		}
+
+		tm = (th + tl) / 2.0
+	}
+
+	print(tm)
+	return tm
 }
 
 // MALE (67 kg)
