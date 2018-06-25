@@ -15,22 +15,24 @@ const cdaM = 0.325 // 1.85m
 const cdaF = 0.293 // 1.67m
 
 // CalcM calculates the PERF score for a performance of duration t on a climb
-// of distance d in metres and gradient gr (rise/run) for a male rider.
-func CalcM(t, d, gr float64) float64 {
-	return score(t, twr(d, gr, mrM, cdaM, cpM))
+// of distance d in metres, gradient gr (rise/run) and median elevation h in
+// metres for a male rider.
+func CalcM(t, d, gr, h float64) float64 {
+	return score(t, twr(d, gr, h, mrM, cdaM, cpM))
 }
 
 // CalcF calculates the PERF score for a performance of duration t on a climb
-// of distance d in metres and gradient gr (rise/run) for a female rider.
-func CalcF(t, d, gr float64) float64 {
-	return score(t, twr(d, gr, mrF, cdaF, cpF))
+// of distance d in metres, gradient gr (rise/run) and median elevation h in
+// metres for a female rider.
+func CalcF(t, d, gr, h float64) float64 {
+	return score(t, twr(d, gr, h, mrF, cdaF, cpF))
 }
 
 func score(t, wr float64) float64 {
 	return 1000 * math.Pow(wr/t, 3)
 }
 
-func twr(d, gr, mr, cda float64, cp func(float64) float64) float64 {
+func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
 	// epsilon is some small value that determines when we will stop the search
 	const epsilon = 1e-6
 	// max is the maxmium number of iterations of the search
@@ -40,8 +42,8 @@ func twr(d, gr, mr, cda float64, cp func(float64) float64) float64 {
 	tl, tm, th := 0.0, 3600.0, 7200.0
 	for j := 0; j < max; j++ {
 		vg := d / tm
-		p1 := calc.Psimp(calc.Rho0, cda, calc.Crr, vg, vg, gr, mt, calc.G, calc.Ec, calc.Fw)
-		p2 := cp(tm)
+		p1 := calc.Psimp(calc.Rho(h, calc.G), cda, calc.Crr, vg, vg, gr, mt, calc.G, calc.Ec, calc.Fw)
+		p2 := calc.AltitudeAdjust(cp(tm), h)
 
 		if calc.Eqf(p1, p2, epsilon) {
 			break

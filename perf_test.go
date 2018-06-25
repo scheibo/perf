@@ -2,46 +2,57 @@ package perf
 
 import (
 	"testing"
+	"time"
 
 	"github.com/scheibo/calc"
 )
 
 func TestCalcM(t *testing.T) {
 	tests := []struct {
-		t, d, gr, expected float64
+		dur                string
+		d, gr, h, expected float64
 	}{
-		{965, 4800, 0.08125, 500},   // OLH: 16m05
-		{766, 4800, 0.08125, 1000},  // OLH: 12m46 (13m26)
-		{2260, 13910, 0.0790, 1000}, // Huez: 37m40 (36m50)
-		{1605, 9880, 0.0799, 1000},  // Gibraltr: 26m45 (27m12)
-		{1904, 13100, 0.0668, 1000}, // Madone: 31m44 (29m40)
-		{2184, 16380, 0.0571, 1000}, // Diablo (S): 36m24 (38m36)
-		{1375, 8900, 0.0746, 1000},  // Ax-3: 22m55 (22m57)
-		{2741, 15650, 0.0874, 1000}, // Ventoux: 45m41 (45m47)
-		{2244, 10100, 0.1188, 1000}, // Zoncolan: 37m24 (39m04)
+		{"16m11s", 4800, 0.08125, (108 + 498) / 2, 500},   // OLH 13m26s
+		{"12m51s", 4800, 0.08125, (108 + 498) / 2, 1000},  // OLH 13m26s
+		{"39m09s", 13910, 0.0790, (733 + 1832) / 2, 1000}, // Huez 39m01s (36m50s)
+		{"27m11s", 9880, 0.0799, (268 + 1059) / 2, 1000},  // Gibraltr 27m12s
+		{"32m00s", 13100, 0.0668, (41 + 916) / 2, 1000},   // Madone 35m36 (29m40s)
+		{"36m46s", 16380, 0.0571, (223 + 1159) / 2, 1000}, // Diablo (S) 38m36s
+		{"23m32s", 8900, 0.0746, (727 + 1353) / 2, 1000},  // Ax-3 23m14s (22m57s)
+		{"47m28s", 15650, 0.0874, (528 + 1870) / 2, 1000}, // Ventoux 48m35s (45m47s)
+		{"39m00s", 10100, 0.1188, (546 + 1674) / 2, 1000}, // Zoncolan 39m04s
 	}
 	for _, tt := range tests {
-		actual := CalcM(tt.t, tt.d, tt.gr)
+		actual := CalcM(duration(t, tt.dur), tt.d, tt.gr, tt.h)
 		if !calc.Eqf(actual, tt.expected) {
-			t.Errorf("CalcM(%.3f, %.3f, %.3f): got: %.3f, want: %.3f",
-				tt.t, tt.d, tt.gr, actual, tt.expected)
+			t.Errorf("CalcM(%s, %.3f, %.3f, %.3f): got: %.3f, want: %.3f",
+				tt.dur, tt.d, tt.gr, tt.h, actual, tt.expected)
 		}
 	}
 }
 
 func TestCalcF(t *testing.T) {
 	tests := []struct {
-		t, d, gr, expected float64
+		dur                string
+		d, gr, h, expected float64
 	}{
-		{1113, 4800, 0.08125, 500},  // OLH: 18m33
-		{884, 4800, 0.08125, 1000},  // OLH: 14m44 (17m12)
-		{2579, 13910, 0.0790, 1000}, // Huez: 42m59 (49m46)
+		{"18m41s", 4800, 0.08125, (108 + 498) / 2, 500},   // OLH 17m12s
+		{"14m50s", 4800, 0.08125, (108 + 498) / 2, 1000},  // OLH 17m12s
+		{"44m47s", 13910, 0.0790, (733 + 1832) / 2, 1000}, // Huez 49m46s
 	}
 	for _, tt := range tests {
-		actual := CalcF(tt.t, tt.d, tt.gr)
+		actual := CalcF(duration(t, tt.dur), tt.d, tt.gr, tt.h)
 		if !calc.Eqf(actual, tt.expected) {
-			t.Errorf("CalcF(%.3f, %.3f, %.3f): got: %.3f, want: %.3f",
-				tt.t, tt.d, tt.gr, actual, tt.expected)
+			t.Errorf("CalcF(%s, %.3f, %.3f, %.3f): got: %.3f, want: %.3f",
+				tt.dur, tt.d, tt.gr, tt.h, actual, tt.expected)
 		}
 	}
+}
+
+func duration(t *testing.T, s string) float64 {
+	dur, err := time.ParseDuration(s)
+	if err != nil {
+		t.Errorf("Failed to parse duration %s", s)
+	}
+	return float64(dur / time.Second)
 }
