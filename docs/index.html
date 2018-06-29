@@ -8,8 +8,9 @@
       #content {
         font-family: "Roboto", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
         padding-top: 0.5em;
-        margin: 0px auto;
+        margin: 2em auto;
         max-width: 690px;
+        line-height: 1.4em;
       }
       .formula {
         font-family: monospace;
@@ -17,8 +18,11 @@
       div.formula {
         text-align: center;
       }
+      .narrow {
+        line-height: 1em;
+      }
       h1 {
-        margin-bottom: 0.3em;
+        margin-bottom: 0.5em;
       }
       .subtitle {
         font-size: 1.2em;
@@ -54,21 +58,21 @@
         based on comparing a event performance’s time to the current world record for that event (the
         ‘base’ performance) and applying a cubic function to arrive at a points total:
       </p>
-      <div class="formula">
+      <div class="formula narrow">
         <span>1000 (t<sub>WR</sub> / t)<sup>3</sup></span><br /><br />
       </div>
       <p>
         The IAAF tables are based on Dr. Bojidar Spiriev’s Hungarian Scoring Table model which also
         calculates a score based on a base performance and several constants:
       </p>
-      <div class="formula">
+      <div class="formula narrow">
         <span>a (t - t<sub>b</sub>)<sup>c</sup></span><br /><br />
       </div>
       <p>
         Where <span class="formula">a</span>, <span class="formula">t<sub>b</sub> </span> (the base
-        performance) and <span class="formula">c</span> vary based on the event. Mick Bromilow’s <a
-        href="https://www.southernathletics.org.uk/assets/files/bromilowscoring.docx">“Towards a
-        fairer scoring system in athletics“</a> points out some issues and suggests improvements for
+        performance) and <span class="formula">c</span> vary based on the event. Mick Bromilow’s “<a
+        href="https://www.southernathletics.org.uk/assets/files/bromilowscoring.docx">Towards a
+        fairer scoring system in athletics</a>“ points out some issues and suggests improvements for
         this approach, and there are numerous other systems for evaluating or predicting performance in
         athletics (<a href="http://www.cs.uml.edu/~phoffman/xcinfo3.html">Gardner-Purdy points</a>,
         <a href="http://runsmartproject.com/calculator/">Daniels’ VDOT</a>,
