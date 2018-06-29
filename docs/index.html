@@ -1,33 +1,141 @@
 <!doctype html>
 <html lang=en>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PERF</title>
-</head>
-<body>
-  <div id="content">
-    <div style="font-family: monospace">
-	<span>1000 × (t<sub>WR</sub> / t)<sup>3</sup></span><br /><br />
-	<span>a × (t - t<sub>b</sub>)<sup>c</sup></span><br /><br />
-	<span>P<sub>AT</sub> = 1/2 × ρ × (C<sub>D</sub> × A + F<sub>W</sub>) × V<sub>a</sub><sup>2</sup> × V<sub>G</sub></span><br />
-	<span>P<sub>RR</sub> = V<sub>G</sub> × cos[tan<sup>-1</sup>(G<sub>R</sub>)] × C<sub>RR</sub> × m<sub>T</sub> × g</span><br />
-	<span>P<sub>WB</sub> = V<sub>G</sub> × (91 + 8.7 × V<sub>G</sub>) / 1000</span><br />
-	<span>P<sub>PE</sub> = V<sub>G</sub> × m<sub>T</sub> × g × sin[tan<sup>-1</sup>(G<sub>R</sub>)]</span><br />
-	<span>P<sub>KE</sub> = 1/2 × (m<sub>T</sub> + I/r<sup>2</sup>) × (V<sub>Gf</sub><sup>2</sup> - V<sub>Gi</sub><sup>2</sup>) / (t<sub>i</sub> - t<sub>f</sub>) </span><br />
-	<span>P<sub>TOT</sub> = (P<sub>AT</sub> + P<sub>RR</sub> + P<sub>WB</sub> + P<sub>PE</sub> + P<sub>KE</sub>) / E<sub>c</sub></span><br />
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PERF</title>
+    <style>
+      #content {
+        font-family: "Roboto", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        padding-top: 0.5em;
+        margin: 0px auto;
+        max-width: 690px;
+      }
+      .formula {
+        font-family: monospace;
+      }
+      div.formula {
+        text-align: center;
+      }
+      h1 {
+        margin-bottom: 0.3em;
+      }
+      .subtitle {
+        font-size: 1.2em;
+        color: #666;
+        padding-bottom: 0.67em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content">
+      <h1>PERF</h1>
+      <div class="subtitle"><strong>P</strong>erformance
+          <strong>E</strong>quivalency
+          <strong>R</strong>ating
+          <strong>F</strong>ormula</div>
+
+      <h2>Motivation</h2>
+      <p>
+        The desire to rank and compare performances is universal across sports, be it to answer the
+        question of whether Michael Jordan or LeBron James was the better basketball player, what
+        1968 Jim Ryun’s mile time would be on a modern, synthetic track, or whether Katie Ledecky’s
+        or Michael Phelps’ victories were more impressive. However, accurately comparing such
+        performances is difficult and error prone - in all cases we must acknowledge that we will
+        never be able to come up with a definitive answer, the best we can do is come up with
+        metrics to guide the discussion and add a layer of scientific nuance to arguments.
+      </p>
+
+      <h2>Background</h2>
+      <p>
+        In swimming and track and field, the governing bodies (FINA and the IAAF, respectively)
+        publish ‘points’ tables which can be used to rank performances. <a
+        href="https://www.fina.org/sites/default/files/fina_points_table_2.pdf">FINA’s model</a> is
+        based on comparing a event performance’s time to the current world record for that event (the
+        ‘base’ performance) and applying a cubic function to arrive at a points total:
+      </p>
+      <div class="formula">
+        <span>1000 (t<sub>WR</sub> / t)<sup>3</sup></span><br /><br />
+      </div>
+      <p>
+        The IAAF tables are based on Dr. Bojidar Spiriev’s Hungarian Scoring Table model which also
+        calculates a score based on a base performance and several constants:
+      </p>
+      <div class="formula">
+        <span>a (t - t<sub>b</sub>)<sup>c</sup></span><br /><br />
+      </div>
+      <p>
+        Where <span class="formula">a</span>, <span class="formula">t<sub>b</sub> </span> (the base
+        performance) and <span class="formula">c</span> vary based on the event. Mick Bromilow’s <a
+        href="https://www.southernathletics.org.uk/assets/files/bromilowscoring.docx">“Towards a
+        fairer scoring system in athletics“</a> points out some issues and suggests improvements for
+        this approach, and there are numerous other systems for evaluating or predicting performance in
+        athletics (<a href="http://www.cs.uml.edu/~phoffman/xcinfo3.html">Gardner-Purdy points</a>,
+        <a href="http://runsmartproject.com/calculator/">Daniels’ VDOT</a>,
+        <a href="https://www.mcmillanrunning.com/ ">McMillan’s calculator</a>,
+        <a href="http://myweb.lmu.edu/jmureika/track/mercier/instructions.html ">Mercier Score</a>),
+        as well for adjusting for <a href="http://www.cs.uml.edu/~phoffman/wind.html">wind or altitude</a>.
+      </p>
+      <p>
+        Comparing road cycling performance is significantly more difficult than swimming or
+        athletics - road races take place over varying terrain and venues without any standard event
+        distances. Importantly, weather conditions, in particular wind, have a substantially larger
+        impact on performance than in other sports due to the speeds reached during competition and
+        the quadratic nature of aerodynamic drag. As such, coming up with a formula to compare any
+        given cycling performance with another is a nonstarter. However, if we restrict the domain
+        to just comparing cycling <em>climbing</em> performance we can minimize the impact of many
+        confounding factors and come up with a rough model to use for comparison purposes.
+      </p>
+      <p>
+        Comparing cycling climbing performance is not a new idea - Michele Ferrari coined <a
+        href="https://en.wikipedia.org/wiki/VAM_(bicycling)">VAM</a> (<em>velocità ascensionale
+        media</em>) for comparing climbing speed, and Scott Richards &amp; Dr. Michael Puchowicz
+        (<a href="https://veloclinic.com">Veloclinic</a>) have developed models
+        (<a href="http://www.cyclismas.com/biscuits/a-different-approach-to-comparing-climbing-performances/">pVAM</a>,
+        <a href="http://www.cyclismas.com/biscuits/introducing-pvgrad-yes-another-performance-meter/">pVGRAD</a>)
+        for predicting climbing performance. Critics have used these models to argue whether or not a
+        performance was ‘too good to be true’, but these allegations need to be taken with a grain of
+        salt - the models are <a href="https://wattmatters.blog/home/2013/07/windbags.html">subject</a>
+        <a href="https://wattmatters.blog/home/2010/07/ascent-rates-and-power-to-body-mass.html">to</a>
+        <a href="http://djconnel.blogspot.com/2013/07/pvam-and-critical-power-model.html">flaws</a> and
+        <a href="https://wattmatters.blog/home/2013/07/the-elusive-dopeometer.html">don’t</a>
+        <a href="https://wattmatters.blog/home/2013/07/all-things-in-moderation-except-science.html">have</a>
+        <a href="http://sportsscientists.com/2010/07/tour-power-output-reflections/">the</a>
+        <a href="http://sportsscientists.com/2013/07/on-performance-analysis-common-sense-guided/">power</a>
+        to be able to definitively brand a rider as a doper. More recently, the trend has shifting to
+        relying on more scientifically backed models for quantifying cycling climbing performances.
+      </p>
+      <p>
+        Puchowicz’s current approach relies on <a href="https://www.ncbi.nlm.nih.gov/pubmed/28121252">Martin’s mathematical model</a>
+        for calculating cycling power, normalized for typical weight and conditions and corrected for
+        altitude using <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5362642/">Townsend’s model</a>
+        which relies on <a href="https://www.tandfonline.com/doi/abs/10.1080/00140136508930810">Monod and
+        Scherrer’s seminal Critical Power (CP) model</a>. This can be used to calculate an estimated,
+        normalized W/kg for a rider, which can then be compared to other performances of the same duration.
+      </p>
+
+      <h2>Details</h2>
+      <p>
+        Puchowicz’s work provides an excellent starting point for development of
+        ‘<span class="formula">PERF</span>’, a formula for comparing cycling performance across various
+        climbing durations. However, while Puchowicz’s approach is mainly concerned with estimating and
+        comparing Tour de France climbing performances during the race, <span class="formula">PERF</span>
+        aims to also rate one-off efforts by amateur cyclists. Like with FINA/IAAF points tables, a
+        world class performance should rate around 1000 points, with less impressive performances
+        earning progressively less points.
+      </p>
+      <p>
+        <span class="formula">PERF</span> begins by deriving an altitude-adjusted estimation for
+        normalized power-to-weight ratio (W/kg) based on Martin’s and Townsend’s models:
+      </p>
+      <div class="formula">
+        <span>P<sub>AT</sub> = 1/2 ρ (C<sub>D</sub> A + F<sub>W</sub>) V<sub>a</sub><sup>2</sup> V<sub>G</sub></span><br />
+        <span>P<sub>RR</sub> = V<sub>G</sub> cos[tan<sup>-1</sup>(G<sub>R</sub>)] C<sub>RR</sub> m<sub>T</sub> g</span><br />
+        <span>P<sub>WB</sub> = V<sub>G</sub> (91 + 8.7 V<sub>G</sub>) / 1000</span><br />
+        <span>P<sub>PE</sub> = V<sub>G</sub> m<sub>T</sub> g sin[tan<sup>-1</sup>(G<sub>R</sub>)]</span><br />
+        <span>P<sub>KE</sub> = 1/2 (m<sub>T</sub> + I/r<sup>2</sup>) (V<sub>Gf</sub><sup>2</sup> - V<sub>Gi</sub><sup>2</sup>) / (t<sub>i</sub> - t<sub>f</sub>) </span><br />
+        <span>P<sub>TOT</sub> = (P<sub>AT</sub> + P<sub>RR</sub> + P<sub>WB</sub> + P<sub>PE</sub> + P<sub>KE</sub>) / E<sub>c</sub></span><br />
+      </div>
     </div>
-    <br /><hr /><br />
-    <div style="font-family: monospace">
-	<span>1000 (t<sub>WR</sub> / t)<sup>3</sup></span><br /><br />
-	<span>a (t - t<sub>b</sub>)<sup>c</sup></span><br /><br />
-	<span>P<sub>AT</sub> = 1/2 ρ (C<sub>D</sub> A + F<sub>W</sub>) V<sub>a</sub><sup>2</sup> V<sub>G</sub></span><br />
-	<span>P<sub>RR</sub> = V<sub>G</sub> cos[tan<sup>-1</sup>(G<sub>R</sub>)] C<sub>RR</sub> m<sub>T</sub> g</span><br />
-	<span>P<sub>WB</sub> = V<sub>G</sub> (91 + 8.7 V<sub>G</sub>) / 1000</span><br />
-	<span>P<sub>PE</sub> = V<sub>G</sub> m<sub>T</sub> g sin[tan<sup>-1</sup>(G<sub>R</sub>)]</span><br />
-	<span>P<sub>KE</sub> = 1/2 (m<sub>T</sub> + I/r<sup>2</sup>) (V<sub>Gf</sub><sup>2</sup> - V<sub>Gi</sub><sup>2</sup>) / (t<sub>i</sub> - t<sub>f</sub>) </span><br />
-	<span>P<sub>TOT</sub> = (P<sub>AT</sub> + P<sub>RR</sub> + P<sub>WB</sub> + P<sub>PE</sub> + P<sub>KE</sub>) / E<sub>c</sub></span><br />
-    </div>
-  </div>
-</body>
+  </body>
 </html>
