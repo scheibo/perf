@@ -36,9 +36,9 @@ func TestCalcF(t *testing.T) {
 		dur                string
 		d, gr, h, expected float64
 	}{
-		{"18m38s", 4800, 0.08125, (108 + 498) / 2, 500},   // OLH 17m12s
-		{"14m47s", 4800, 0.08125, (108 + 498) / 2, 1000},  // OLH 17m12s
-		{"44m41s", 13910, 0.0790, (733 + 1832) / 2, 1000}, // Huez 49m46s
+		{"18m39s", 4800, 0.08125, (108 + 498) / 2, 500},   // OLH 17m12s
+		{"14m48s", 4800, 0.08125, (108 + 498) / 2, 1000},  // OLH 17m12s
+		{"44m44s", 13910, 0.0790, (733 + 1832) / 2, 1000}, // Huez 49m46s
 	}
 	for _, tt := range tests {
 		actual := CalcF(duration(t, tt.dur), tt.d, tt.gr, tt.h)

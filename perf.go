@@ -11,8 +11,8 @@ const mb = 8.0
 const mrM = 67.0
 const mrF = 53.0
 
-const cdaM = 0.325 // 1.85m
-const cdaF = 0.293 // 1.67m
+const cdaM = 0.325 // 1.80m
+const cdaF = 0.297 // 1.67m
 
 // CalcM calculates the PERF score for a performance of duration t on a climb
 // of distance d in metres, gradient gr (rise/run) and median elevation h in
