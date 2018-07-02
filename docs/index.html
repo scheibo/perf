@@ -14,13 +14,11 @@
       }
       .formula {
         font-family: monospace;
+        line-height: 1em;
       }
       div.formula {
         text-align: center;
         line-height: 1.3em;
-      }
-      div.narrow {
-        line-height: 1em;
       }
       h1 {
         margin-bottom: 0.5em;
@@ -40,7 +38,7 @@
           <strong>R</strong>ating
           <strong>F</strong>ormula</div>
 
-      <h2>Motivation</h2>
+      <h2 id="motivation">Motivation</h2>
       <p>
         The desire to rank and compare performances is universal across sports, be it to answer the
         question of whether Michael Jordan or LeBron James was the better basketball player, what
@@ -51,7 +49,7 @@
         metrics to guide the discussion and add a layer of scientific nuance to arguments.
       </p>
 
-      <h2>Background</h2>
+      <h2 id="background">Background</h2>
       <p>
         In swimming and track and field, the governing bodies (FINA and the IAAF, respectively)
         publish ‘points’ tables which can be used to rank performances. <a
@@ -59,15 +57,15 @@
         based on comparing a event performance’s time to the current world record for that event (the
         ‘base’ performance) and applying a cubic function to arrive at a points total:
       </p>
-      <div class="formula narrow">
-        <span>1000 (t<sub>WR</sub> / t)<sup>3</sup></span><br /><br />
+      <div class="formula">
+        <span>1000 (t<sub>WR</sub> / t)<sup>3</sup></span><br />
       </div>
       <p>
         The IAAF tables are based on Dr. Bojidar Spiriev’s Hungarian Scoring Table model which also
         calculates a score based on a base performance and several constants:
       </p>
-      <div class="formula narrow">
-        <span>a (t - t<sub>b</sub>)<sup>c</sup></span><br /><br />
+      <div class="formula">
+        <span>a (t - t<sub>b</sub>)<sup>c</sup></span><br />
       </div>
       <p>
         Where <span class="formula">a</span>, <span class="formula">t<sub>b</sub> </span> (the base
@@ -119,7 +117,7 @@
         normalized W/kg for a rider, which can then be compared to other performances of the same duration.
       </p>
 
-      <h2>Details</h2>
+      <h2 id="details">Details</h2>
       <p>
         Puchowicz’s work provides an excellent starting point for development of
         ‘<span class="formula">PERF</span>’, a formula for comparing cycling performance across various
@@ -144,8 +142,76 @@
         <span>m<sub>T</sub> = m<sub>R</sub> + m<sub>B</sub></span><br />
         <span>ρ = (p<sub>0</sub> (1 - Lh/T<sub>0</sub>)<sup>(gM)/(RL)</sup>M)/(R(T<sub>0</sub> - Lh))</span><br />
         <br />
-        <span>P<sub>ALT</sub> =  P (0.0016x<sup>3</sup> + 0.0157x<sup>2</sup> + 0.027x + 1.0025)</span><br />
+        <span>P<sub>ALT</sub> = P (0.0016x<sup>3</sup> + 0.0157x<sup>2</sup> + 0.027x + 1.0025)</span><br />
       </div>
+      <p>
+        Where <span class="formula">C<sub>RR</sub></span>, <span class="formula">E<sub>C</sub></span>,
+        <span class="formula">g</span>, <span class="formula">F<sub>w</sub></span>, <span class="formula">T
+        <sub>0</sub></span>, <span class="formula">p<sub>0</sub></span>, <span class="formula">L</span>,
+        <span class="formula">M</span>, <span class="formula">R</span> are all constants with
+        standard, well defined values, and the <span class="formula">m<sub>B</sub></span> is assumed
+        to be <span class="formula">8 kg</span> (<span class="formula">6.8 kg</span> is the UCI limit
+        for a bicycle, and then we need to account for clothes/helmet/shoes etc). Puchowicz simplifies
+        these equations by assuming there is no change in kinetic energy (ie. the rider doesn’t need
+        to accelerate into the base of the climb and thus <span class="formula">P<sub>KE</sub></span>
+        is zero), assumes there is no wind (see ‘<a href="#considerations">Considerations</a>’ below),
+        so air velocity is equal to the ground velocity (<span class="formula">V<sub>a</sub> =
+        V<sub>G</sub></span>), when calculating <span class="formula">P<sub>AT</sub></span>, and
+        derives the density of air (<span class="formula">ρ</span> ) based on the median altitude <span
+        class="formula">h</span>.  Puchowicz actually goes even further and ignores the contributions
+        related to wheel bearing friction (<span class="formula">P<sub>WB</sub></span>) given that they
+        are fairly negligible, but for completeness we leave this factor in the model for <span
+        class="formula">PERF</span>.
+      </p>
+      <p>
+        The aerodynamic drag (<span class="formula">C<sub>D</sub>A</span>) depends on the coefficient of
+        drag (<span class="formula">C<sub>D</sub></span>) for a cyclist which from “Bicycling Science”
+        (Wilson, 2004) can be <span class="formula">0.88</span>/<span class="formula">1.0</span>/<span
+        class="formula">1.15</span> depending on the whether the rider is in the drops/hoods/tops
+        respectively (Puchowicz uses <span class="formula">0.84</span>). For these same positions the
+        respective frontal area (<span class="formula">A</span>) is
+        <span class="formula">0.36</span>/<span class="formula">0.40</span>/<span class="formula">0.632</span>.
+        Alternatively, area can be derived from the historically observed relationship between a rider’s height
+        and weight and his frontal area in the drops:
+      </p>
+      <div class="formula">
+        <span>A = 0.0276 h<sub>R</sub><sup>0.725</sup>  m<sub>R</sub><sup>0.425</sup> + 0.1647</span><br />
+      </div>
+      <p>
+        Where <span class="formula">m<sub>R</sub></span> is the mass of the rider (which is normalized
+        to <span class="formula">67 kg</span> for male riders and for <span class="formula">53 kg</span>
+        female riders) and <span class="formula">h<sub>R</sub></span> is the height of the rider. If we
+        normalize height to be <span class="formula">1.80 m</span> for male riders we get a 
+        <span class="formula">C<sub>D</sub>A</span> in the drops of <span class="formula">0.367</span> which
+        seems high - we would expect the value to be closer to <span class="formula">0.3</span> for a cyclist
+        in the drops to match empirically determined numbers. As such, for <span class="formula">PERF</span>,
+        we assume a <span class="formula">C<sub>D</sub>A</span> of <span class="formula">0.325</span> for men
+        (<span class="formula">0.300</span> for women, rounded from <span class="formula">0.297</span> which is
+        what we get after scaling <span class="formula">0.325</span> to account for the smaller body size) to
+        represent a climbing cyclist who spends time in the drops/hoods/tops but attempts to maintain as
+        aggressive a position as possible for the duration of the effort.
+      </p>
+      <p>
+        In order to arrive at a rating for this value we can compare the performance
+        <a href="https://www.trainingpeaks.com/blog/power-profiling/">Coggan’s table</a> of what cyclists of various
+        levels should be able to produce. These values can be thought of as the ‘base’ performance used
+        in the models used by FINA and the IAAF. The values at the top of this table can be used to fit
+        the CP model and we can then project what the expected ‘World Record’ power-to-weight ratio
+        would be for any given duration for male or female riders:
+      </p>
+      <div class="formula">
+        <span>CP<sub>M</sub> = 422.58 + 23296.7801287949/t</span><br />
+        <span>CP<sub>F</sub> = 298.29 + 13499.9080036799/t</span><br />
+      </div>
+      <p>
+        Finally, in order to come up with a rating between 0-1000 points, we simply use these critical
+        power formulas (adjusted for median altitude using <span class="formula">P<sub>ALT</sub></span>)
+        and the simplified <span class="formula">P<sub>TOT</sub></span> formula to come up with a <span
+        class="formula">t<sub>WR</sub></span> for a given climb and then use FINA’s formula to compare it
+        to a performance of duration <span class="formula">t</span>.
+      </p>
+      <h2 id="considerations">Considerations</h2>
+      <h2 id="examples">Examples</h2>
     </div>
   </body>
 </html>
