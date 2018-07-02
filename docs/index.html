@@ -194,11 +194,11 @@
       </p>
       <p>
         In order to arrive at a rating for this value we can compare the performance
-        <a href="https://www.trainingpeaks.com/blog/power-profiling/">Coggan’s table</a> of what cyclists of various
-        levels should be able to produce. These values can be thought of as the ‘base’ performance used
-        in the models used by FINA and the IAAF. The values at the top of this table can be used to fit
-        the CP model and we can then project what the expected ‘World Record’ power-to-weight ratio
-        would be for any given duration for male or female riders:
+        <a href="https://www.trainingpeaks.com/blog/power-profiling/">Coggan’s table</a> of what
+        cyclists of various levels should be able to produce. These values can be thought of as the
+        ‘base’ performance used in the models used by FINA and the IAAF. The values at the top of this
+        table can be used to fit the CP model and we can then project what the expected ‘World Record’
+        power-to-weight ratio would be for any given duration for male or female riders:
       </p>
       <div class="formula">
         <span>CP<sub>M</sub> = 422.58 + 23296.7801287949/t</span><br />
@@ -208,8 +208,13 @@
         Finally, in order to come up with a rating between 0-1000 points, we simply use these critical
         power formulas (adjusted for median altitude using <span class="formula">P<sub>ALT</sub></span>)
         and the simplified <span class="formula">P<sub>TOT</sub></span> formula to come up with a <span
-        class="formula">t<sub>WR</sub></span> for a given climb and then use FINA’s formula to compare it
-        to a performance of duration <span class="formula">t</span>.
+        class="formula">t<sub>WR</sub></span> for a given climb and then use a modified version of FINA’s
+        formula to compare it to a performance of duration <span class="formula">t</span>. Instead of
+        <em>cubing</em> the difference between <span class="formula">t<sub>WR</sub></span> and <span
+        class="formula">t</span>, we instead <em>square</em> it in order to give us a rating which rewards
+        more points to sub-‘World Record’ performances. Because <span class="formula">PERF</span> is
+        intended to be used to rank amateur performances, this adjustment helps ensure a more reasonable
+        spread for the typical data points we deal with.
       </p>
       <h2 id="considerations">Considerations</h2>
       <h2 id="examples">Examples</h2>

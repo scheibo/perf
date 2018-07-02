@@ -29,7 +29,7 @@ func CalcF(t, d, gr, h float64) float64 {
 }
 
 func score(t, wr float64) float64 {
-	return 1000 * math.Pow(wr/t, 3)
+	return 1000 * math.Pow(wr/t, 2)
 }
 
 func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
