@@ -8,8 +8,7 @@
     <style>
       #content {
         font-family: "Roboto", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-        padding-top: 0.5em;
-        margin: 2em auto;
+        margin: 6em auto;
         max-width: 690px;
         line-height: 1.4em;
       }
@@ -23,6 +22,9 @@
       }
       h1 {
         margin-bottom: 0.5em;
+      }
+      h3 {
+        color: #666;
       }
       .subtitle {
         font-size: 1.2em;
@@ -159,7 +161,7 @@
         so air velocity is equal to the ground velocity (<span class="formula">V<sub>a</sub> =
         V<sub>G</sub></span>), when calculating <span class="formula">P<sub>AT</sub></span>, and
         derives the density of air (<span class="formula">ρ</span> ) based on the median altitude <span
-        class="formula">h</span>.  Puchowicz actually goes even further and ignores the contributions
+        class="formula">h</span>. Puchowicz actually goes even further and ignores the contributions
         related to wheel bearing friction (<span class="formula">P<sub>WB</sub></span>) given that they
         are fairly negligible, but for completeness we leave this factor in the model for <span
         class="formula">PERF</span>.
@@ -176,13 +178,13 @@
         and weight and his frontal area in the drops:
       </p>
       <div class="formula">
-        <span>A = 0.0276 h<sub>R</sub><sup>0.725</sup>  m<sub>R</sub><sup>0.425</sup> + 0.1647</span><br />
+        <span>A = 0.0276 h<sub>R</sub><sup>0.725</sup> m<sub>R</sub><sup>0.425</sup> + 0.1647</span><br />
       </div>
       <p>
         Where <span class="formula">m<sub>R</sub></span> is the mass of the rider (which is normalized
         to <span class="formula">67 kg</span> for male riders and for <span class="formula">53 kg</span>
         female riders) and <span class="formula">h<sub>R</sub></span> is the height of the rider. If we
-        normalize height to be <span class="formula">1.80 m</span> for male riders we get a 
+        normalize height to be <span class="formula">1.80 m</span> for male riders we get a
         <span class="formula">C<sub>D</sub>A</span> in the drops of <span class="formula">0.367</span> which
         seems high - we would expect the value to be closer to <span class="formula">0.3</span> for a cyclist
         in the drops to match empirically determined numbers. As such, for <span class="formula">PERF</span>,
@@ -216,8 +218,71 @@
         intended to be used to rank amateur performances, this adjustment helps ensure a more reasonable
         spread for the typical data points we deal with.
       </p>
+      <div class="formula">
+        <span>1000 (t<sub>WR</sub> / t)<sup><strong>2</strong></sup></span><br />
+      </div>
       <h2 id="considerations">Considerations</h2>
       <h2 id="examples">Examples</h2>
+      <p>
+        In order to verify PERF as efficacious, it is instructive to see how it scores performances
+        across several benchmark climbs:
+      </p>
+      <h3>Old La Honda</h3>
+      <p>
+        <a href="https://www.strava.com/segments/8109834">Old La Honda</a> (OLH) is a benchmark climb in
+        the Bay Area, climbing 390m in 4.80km according to Strava (<a
+        href="https://graphics.stanford.edu/~lucasp/grade/oldlahonda.html">alternative measurements</a>
+        end up being significantly different - for our purposes Strava is the authority for these
+        examples). Similar to a 5000m running race in athletics, strong amateur performances on OLH are in
+        the 14:30-15:00 range, with the best time from a retired professional currently standing at 13:26.
+        <span class="formula">PERF</span> projects the <span class="formula">t<sub>WR</sub></span> to be
+        12:49 for a motivated World Tour professional, a time which is in line with a typical WL
+         performance in the 5000m on the track. For women, a time of 14:49 would score 1000 points.
+      </p>
+      <p>
+        OLH (along with Alpe d’Huez) is one of the climbs used to help determine the ‘slope’ of <span
+        class="formula">PERF</span> - the coefficient of <span class="formula">2</span> in the scoring
+        function was chosen so that a time for men close to 18:00 (4.5 W/kg) would be worth around 500
+        points (506). Furthermore, when we convert the best amateur female time (17:12) we get 14:53,
+        which compares favorably to the best male amateur times (14:40-15:00). As another form of
+        verification, we can compare OLH times to another benchmark climb in the Bay Area - a 17:00 OLH
+        is deemed to be roughly equivalent to a 22:43 <a href="https://www.strava.com/segments/611413">
+        Kings Mountain</a> time.
+      </p>
+      <h3>Alpe d'Huez</h3>
+      <p>
+        Perhaps the most famous climb of the Tour de France (and cycling),
+        <a href="https://www.strava.com/segments/683473">Alpe d’Huez</a> climbs 1099m in 13.91km. The
+        <a href="http://www.fillarifoorumi.fi/forum/showthread.php?38129-Ammattilaispy%F6r%E4ilij%F6iden-nousutietoja-(aika-km-h-VAM-W-W-kg-etc-)&p=2041608#post2041608">
+        list of best performances</a> is rife with suspect times, but a time somewhere in the range of Carlos
+        Sastre’s 39:01 in 2006 and Nairo Quintana’s 39:50 in 2013 seems like it could plausibly be
+        considered the world’s best clean performance. <span class="formula">PERF</span> predicts a time
+        of 39:04 as the best male performance (44:46 for females).
+      </p>
+      <p>
+        Like with OLH, Alpe d’Huez was used to adjust the coefficient of the scoring function - a 57:00
+        performance would be performed at FTP and would take 4 W/kg - we would wish for <span
+        class="formula">PERF</span> to give this close to 500 points (<span class="formula">PERF</span>
+        rewards a 55:16 male performance with 500 points).
+      </p>
+      <h3>Others</h3>
+      <p>
+      Egan Bernal’s <a href="https://www.strava.com/activities/1576474365#39408611839">27:12</a> on <a
+      href="https://www.strava.com/segments/658277" >Gibraltr Road</a> during the 2018 Tour of California is
+      very close to the <span class="formula">t<sub>WR</sub></span> predicted by <span class="formula">PERF</span>
+      (27:06). <span class="formula">PERF</span> predicts a 31:54 best time on <a href="https://www.strava.com/segments/2363">
+      Col de la Madone</a> which falls in the middle of the times claimed by
+      <a href="http://www.cyclingweekly.com/news/latest-news/la-madone-tour-contenders-favourite-testing-ground-197321">
+      Armstrong, Froome and Porte</a> and the <a href="https://www.strava.com/activities/370233568#8845011061">
+      current best professional time on Strava</a>. Chris Froome’s remarkable
+      <a href="http://www.fillarifoorumi.fi/forum/showthread.php?38129-Ammattilaispy%F6r%E4ilij%F6iden-nousutietoja-(aika-km-h-VAM-W-W-kg-etc-)&p=2045251#post2045251">
+      Ax-3 Domaines</a> performance in the 2013 Tour of 23:14 slightly exceeds the projected <span class="formula">
+      t<sub>WR</sub></span> of 23:29, and the predicted bests of 47:22 for
+      <a href="http://www.fillarifoorumi.fi/forum/showthread.php?38129-Ammattilaispy%F6r%E4ilij%F6iden-nousutietoja-(aika-km-h-VAM-W-W-kg-etc-)&p=2061073#post2061073">
+      Ventoux</a> and 38:54 for
+      <a href="http://www.fillarifoorumi.fi/forum/showthread.php?38129-Ammattilaispy%F6r%E4ilij%F6iden-nousutietoja-(aika-km-h-VAM-W-W-kg-etc-)&p=2218881#post2218881">
+      Zoncolan</a> are both in the ballpark of what one might claim are reasonably achievable clean.
+      </p>
     </div>
   </body>
 </html>
