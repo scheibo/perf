@@ -52,6 +52,20 @@ func CpF(t float64) float64 {
 	return 298.29 + 13499.9080036799/t
 }
 
+// CalcTimeM calculates the duration of a performance with PERF score s on a climb
+// of distance d in metres, gradient gr (rise/run) and median elevation h in
+// metres for a male rider.
+func CalcTimeM(s, d, gr, h float64) float64 {
+	return rscore(s, twr(d, gr, h, mrM, cdaM, CpM))
+}
+
+// CalcTimeF calculates the duration of a performance with PERF score s on a climb
+// of distance d in metres, gradient gr (rise/run) and median elevation h in
+// metres for a female rider.
+func CalcTimeF(s, d, gr, h float64) float64 {
+	return rscore(s, twr(d, gr, h, mrF, cdaF, CpF))
+}
+
 func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
 	// epsilon is some small value that determines when we will stop the search
 	const epsilon = 1e-6
@@ -83,4 +97,8 @@ func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
 
 func score(t, wr float64) float64 {
 	return 1000 * math.Pow(wr/t, 2)
+}
+
+func rscore(s, wr float64) float64 {
+	return math.Sqrt(1000 * math.Pow(wr, 2) / s)
 }

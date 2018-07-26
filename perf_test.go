@@ -50,6 +50,42 @@ func TestCalcF(t *testing.T) {
 	}
 }
 
+func TestCalcTimeM(t *testing.T) {
+	tests := []struct {
+		expected    string
+		d, gr, h, s float64
+	}{
+		{"12m49s", 4800, 0.08125, (108 + 498) / 2, 1000},
+		{"39m04s", 13910, 0.0790, (733 + 1832) / 2, 1000},
+	}
+	for _, tt := range tests {
+		actual := CalcTimeM(tt.s, tt.d, tt.gr, tt.h)
+		dur := duration(t, tt.expected)
+		if !calc.Eqf(actual, dur) {
+			t.Errorf("CalcTimeM(%.3f, %.3f, %.3f, %.3f): got: %.3f, want: %.3f",
+				tt.s, tt.d, tt.gr, tt.h, actual, dur)
+		}
+	}
+}
+
+func TestCalcTimeF(t *testing.T) {
+	tests := []struct {
+		expected    string
+		d, gr, h, s float64
+	}{
+		{"14m49s", 4800, 0.08125, (108 + 498) / 2, 1000},
+		{"44m46s", 13910, 0.0790, (733 + 1832) / 2, 1000},
+	}
+	for _, tt := range tests {
+		actual := CalcTimeF(tt.s, tt.d, tt.gr, tt.h)
+		dur := duration(t, tt.expected)
+		if !calc.Eqf(actual, dur) {
+			t.Errorf("CalcTimeF(%.3f, %.3f, %.3f, %.3f): got: %.3f, want: %.3f",
+				tt.s, tt.d, tt.gr, tt.h, actual, dur)
+		}
+	}
+}
+
 func duration(t *testing.T, s string) float64 {
 	dur, err := time.ParseDuration(s)
 	if err != nil {
