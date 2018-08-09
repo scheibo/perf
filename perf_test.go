@@ -13,7 +13,7 @@ func TestCalcM(t *testing.T) {
 		dur                string
 		d, gr, h, expected float64
 	}{
-		{"18m07s", 4800, 0.08125, (108 + 498) / 2, 500},  // OLH 18m00s = 4.5 W/kg
+		{"18m09s", 4809, 0.0812, (108 + 498) / 2, 500},   // OLH 18m00s = 4.5 W/kg
 		{"55m16s", 13910, 0.0790, (733 + 1832) / 2, 500}, // Huez 57m00s = 4 W/kg
 	}
 	for _, tt := range tests {
@@ -30,7 +30,7 @@ func TestCalcF(t *testing.T) {
 		dur                string
 		d, gr, h, expected float64
 	}{
-		{"20m57s", 4800, 0.08125, (108 + 498) / 2, 500}, // OLH 17m00s
+		{"20m59s", 4809, 0.0812, (108 + 498) / 2, 500}, // OLH 17m00s
 	}
 	for _, tt := range tests {
 		actual := CalcF(fromDuration(t, tt.dur), tt.d, tt.gr, tt.h)
@@ -46,7 +46,7 @@ func TestCalcTimeM(t *testing.T) {
 		expected    string
 		d, gr, h, s float64
 	}{
-		{"12m49s", 4800, 0.08125, (108 + 498) / 2, 1000},  // OLH 13m26s
+		{"12m50s", 4809, 0.0812, (108 + 498) / 2, 1000},   // OLH 13m26s
 		{"39m04s", 13910, 0.0790, (733 + 1832) / 2, 1000}, // Huez 39m01s (36m50s)
 		{"27m06s", 9880, 0.0799, (268 + 1059) / 2, 1000},  // Gibraltr 27m12s
 		{"31m54s", 13100, 0.0668, (41 + 916) / 2, 1000},   // Madone 35m36 (29m40s)
