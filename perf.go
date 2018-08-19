@@ -1,3 +1,5 @@
+// Package perf implements the 'Performance Equivalency Rating Formula' for
+// scoring road cycling performances on climbs for ranking and comparison purposes.
 package perf
 
 import (
@@ -31,11 +33,13 @@ func CalcF(t, d, gr, h float64) float64 {
 // CpM returns the expected power maintable for a male rider during a world
 // record level performance of duration t.
 //
-// MALE (67 kg)
-// 1 min: 11.5 W/kg
-// 5min:  7.60 W/kg
-// 60min: 6.40 W/kg
-// 770 W/509 W/429 W
+//		MALE (67 kg)
+//		----------------
+//		1 min: 11.5 W/kg
+//		5min:  7.60 W/kg
+//		60min: 6.40 W/kg
+//		----------------
+//		770 W/509 W/429 W
 func CpM(t float64) float64 {
 	return 422.58 + 23296.7801287949/t
 }
@@ -43,11 +47,13 @@ func CpM(t float64) float64 {
 // CpF returns the expected power maintable for a female rider during a world
 // record level performance of duration t.
 //
-// FEMALE (53 kg)
-// 1 min: 9.29 W/kg
-// 5min:  6.61 W/kg
-// 60min: 5.69 W/kg
-// 492 W/350 W/302 W
+//		FEMALE (53 kg)
+//		----------------
+//		1 min: 9.29 W/kg
+//		5min:  6.61 W/kg
+//		60min: 5.69 W/kg
+//		----------------
+//		492 W/350 W/302 W
 func CpF(t float64) float64 {
 	return 298.29 + 13499.9080036799/t
 }

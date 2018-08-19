@@ -1,3 +1,4 @@
+// perf provides a CLI for calculating PERF score of an arbitrary performance.
 package main
 
 import (
@@ -59,9 +60,9 @@ func main() {
 		verify("t", float64(dur))
 		t = float64(dur / time.Second)
 		if x == "M" {
-			score	= perf.CalcM(t, d, gr, h)
+			score = perf.CalcM(t, d, gr, h)
 		} else {
-			score	= perf.CalcF(t, d, gr, h)
+			score = perf.CalcF(t, d, gr, h)
 		}
 
 		fmt.Printf("%s (%.2f km @ %.2f%%) = %.2f\n", fmtDuration(dur), d/1000, gr*100, score)
