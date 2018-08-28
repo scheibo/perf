@@ -10,18 +10,6 @@ import (
 	"github.com/scheibo/perf"
 )
 
-func exit(err error) {
-	fmt.Fprintf(os.Stderr, "%s\n", err)
-	flag.PrintDefaults()
-	os.Exit(1)
-}
-
-func verify(s string, x float64) {
-	if x < 0 {
-		exit(fmt.Errorf("%s must be non negative but was %f", s, x))
-	}
-}
-
 func main() {
 	var e, gr, t, d, h, score float64
 	var x string
@@ -65,7 +53,12 @@ func main() {
 			score = perf.CalcF(t, d, gr, h)
 		}
 
-		fmt.Printf("%s (%.2f km @ %.2f%%) = %.2f\n", fmtDuration(dur), d/1000, gr*100, score)
+		fi, _ := os.Stdout.Stat()
+		if (fi.Mode() & os.ModeCharDevice) == 0 {
+			fmt.Println(score)
+		} else {
+			fmt.Printf("%s (%.2f km @ %.2f%%) = %.2f\n", fmtDuration(dur), d/1000, gr*100, score)
+		}
 	} else {
 		exit(fmt.Errorf("t must be specified"))
 	}
@@ -82,4 +75,16 @@ func fmtDuration(d time.Duration) string {
 		return fmt.Sprintf("%d:%02d:%02d", h, m, s)
 	}
 	return fmt.Sprintf("%d:%02d", m, s)
+}
+
+func verify(s string, x float64) {
+	if x < 0 {
+		exit(fmt.Errorf("%s must be non negative but was %f", s, x))
+	}
+}
+
+func exit(err error) {
+	fmt.Fprintf(os.Stderr, "%s\n", err)
+	flag.PrintDefaults()
+	os.Exit(1)
 }
