@@ -76,16 +76,14 @@ func CalcTimeF(s, d, gr, h float64) float64 {
 // climb of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for the normalized model male rider.
 func CalcPowerM(s, d, gr, h float64) float64 {
-	vg := d / CalcTimeM(s, d, gr, h)
-	return power(d, gr, h, mrM, cdaM, vg)
+	return power(CalcTimeM(s, d, gr, h), d, gr, h, mrM, cdaM)
 }
 
 // CalcPowerF calculates the power required for a performance with PERF score s on a
 // climb of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for the normalized model female rider.
 func CalcPowerF(s, d, gr, h float64) float64 {
-	vg := d / CalcTimeF(s, d, gr, h)
-	return power(d, gr, h, mrF, cdaF, vg)
+	return power(CalcTimeF(s, d, gr, h), d, gr, h, mrF, cdaF)
 }
 
 func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
@@ -96,8 +94,7 @@ func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
 
 	tl, tm, th := 0.0, 3600.0, 7200.0
 	for j := 0; j < max; j++ {
-		vg := d / tm
-		p1 := power(d, gr, h, mr, cda, vg)
+		p1 := power(tm, d, gr, h, mr, cda)
 		p2 := calc.AltitudeAdjust(cp(tm), h)
 
 		if calc.Eqf(p1, p2, epsilon) {
@@ -116,7 +113,8 @@ func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
 	return tm
 }
 
-func power(d, gr, h, mr, cda, vg float64) float64 {
+func power(t, d, gr, h, mr, cda float64) float64 {
+	vg := d / t
 	return calc.Psimp(calc.Rho(h, calc.G), cda, calc.Crr, vg, vg, gr, mr+mb, calc.G, calc.Ec, calc.Fw)
 }
 
