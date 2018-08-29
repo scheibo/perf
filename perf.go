@@ -72,17 +72,32 @@ func CalcTimeF(s, d, gr, h float64) float64 {
 	return rscore(s, twr(d, gr, h, mrF, cdaF, CpF))
 }
 
+// CalcPowerM calculates the power required for a performance with PERF score s on a
+// climb of distance d in metres, gradient gr (rise/run) and median elevation h in
+// metres for the normalized model male rider.
+func CalcPowerM(s, d, gr, h float64) float64 {
+	vg := d / CalcTimeM(s, d, gr, h)
+	return power(d, gr, h, mrM, cdaM, vg)
+}
+
+// CalcPowerF calculates the power required for a performance with PERF score s on a
+// climb of distance d in metres, gradient gr (rise/run) and median elevation h in
+// metres for the normalized model female rider.
+func CalcPowerF(s, d, gr, h float64) float64 {
+	vg := d / CalcTimeF(s, d, gr, h)
+	return power(d, gr, h, mrF, cdaF, vg)
+}
+
 func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
 	// epsilon is some small value that determines when we will stop the search
 	const epsilon = 1e-6
 	// max is the maxmium number of iterations of the search
 	const max = 100
 
-	mt := mr + mb
 	tl, tm, th := 0.0, 3600.0, 7200.0
 	for j := 0; j < max; j++ {
 		vg := d / tm
-		p1 := calc.Psimp(calc.Rho(h, calc.G), cda, calc.Crr, vg, vg, gr, mt, calc.G, calc.Ec, calc.Fw)
+		p1 := power(d, gr, h, mr, cda, vg)
 		p2 := calc.AltitudeAdjust(cp(tm), h)
 
 		if calc.Eqf(p1, p2, epsilon) {
@@ -99,6 +114,10 @@ func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
 	}
 
 	return tm
+}
+
+func power(d, gr, h, mr, cda, vg float64) float64 {
+	return calc.Psimp(calc.Rho(h, calc.G), cda, calc.Crr, vg, vg, gr, mr+mb, calc.G, calc.Ec, calc.Fw)
 }
 
 func score(t, wr float64) float64 {

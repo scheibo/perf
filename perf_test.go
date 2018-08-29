@@ -83,6 +83,37 @@ func TestCalcTimeF(t *testing.T) {
 	}
 }
 
+func TestCalcPowerM(t *testing.T) {
+	tests := []struct {
+		s, d, gr, h, expected float64
+	}{
+		{500, 4809, 0.0812, (108 + 498) / 2, 301},
+		{500, 13910, 0.0790, (733 + 1832) / 2, 276},
+	}
+	for _, tt := range tests {
+		actual := CalcPowerM(tt.s, tt.d, tt.gr, tt.h)
+		if !calc.Eqf(actual, tt.expected) {
+			t.Errorf("CalcPowerM(%.3f, %.3f, %.3f, %.3f): got: %.3f, want: %.3f",
+				tt.s, tt.d, tt.gr, tt.h, actual, tt.expected)
+		}
+	}
+}
+
+func TestCalcPowerF(t *testing.T) {
+	tests := []struct {
+		s, d, gr, h, expected float64
+	}{
+		{1000, 4809, 0.0812, (108 + 498) / 2, 311},
+	}
+	for _, tt := range tests {
+		actual := CalcPowerF(tt.s, tt.d, tt.gr, tt.h)
+		if !calc.Eqf(actual, tt.expected) {
+			t.Errorf("CalcPowerF(%.3f, %.3f, %.3f, %.3f): got: %.3f, want: %.3f",
+				tt.s, tt.d, tt.gr, tt.h, actual, tt.expected)
+		}
+	}
+}
+
 func fromDuration(t *testing.T, s string) float64 {
 	dur, err := time.ParseDuration(s)
 	if err != nil {
