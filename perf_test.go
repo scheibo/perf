@@ -13,8 +13,8 @@ func TestCalcM(t *testing.T) {
 		dur                string
 		d, gr, h, expected float64
 	}{
-		{"18m09s", 4809, 0.0812, (108 + 498) / 2, 500},   // OLH 18m00s = 4.5 W/kg
-		{"55m16s", 13910, 0.0790, (733 + 1832) / 2, 500}, // Huez 57m00s = 4 W/kg
+		{"18m10s", 4809, 0.0812, (108 + 498) / 2, 500},   // OLH 18m00s = 4.5 W/kg
+		{"55m10s", 13910, 0.0790, (733 + 1832) / 2, 500}, // Huez 57m00s = 4 W/kg
 	}
 	for _, tt := range tests {
 		actual := CalcM(fromDuration(t, tt.dur), tt.d, tt.gr, tt.h)
@@ -30,7 +30,7 @@ func TestCalcF(t *testing.T) {
 		dur                string
 		d, gr, h, expected float64
 	}{
-		{"20m59s", 4809, 0.0812, (108 + 498) / 2, 500}, // OLH 17m00s
+		{"21m04s", 4809, 0.0812, (108 + 498) / 2, 500}, // OLH 17m00s
 	}
 	for _, tt := range tests {
 		actual := CalcF(fromDuration(t, tt.dur), tt.d, tt.gr, tt.h)
@@ -87,7 +87,7 @@ func TestCalcPowerM(t *testing.T) {
 	tests := []struct {
 		s, d, gr, h, expected float64
 	}{
-		{500, 4809, 0.0812, (108 + 498) / 2, 301},
+		{500, 4809, 0.0812, (108 + 498) / 2, 300},
 		{500, 13910, 0.0790, (733 + 1832) / 2, 276},
 	}
 	for _, tt := range tests {

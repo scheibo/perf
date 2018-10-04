@@ -20,14 +20,14 @@ const cdaF = 0.300 // 1.67m
 // of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for a male rider.
 func CalcM(t, d, gr, h float64) float64 {
-	return score(t, twr(d, gr, h, mrM, cdaM, CpM))
+	return score(power(t, d, gr, h, mrM, cdaM), calc.AltitudeAdjust(CpM(t), h))
 }
 
 // CalcF calculates the PERF score for a performance of duration t on a climb
 // of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for a female rider.
 func CalcF(t, d, gr, h float64) float64 {
-	return score(t, twr(d, gr, h, mrF, cdaF, CpF))
+	return score(power(t, d, gr, h, mrF, cdaF), calc.AltitudeAdjust(CpF(t), h))
 }
 
 // CpM returns the expected power maintable for a male rider during a world
@@ -62,28 +62,32 @@ func CpF(t float64) float64 {
 // of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for a male rider.
 func CalcTimeM(s, d, gr, h float64) float64 {
-	return rscore(s, twr(d, gr, h, mrM, cdaM, CpM))
+	return time_(CalcPowerM(s, d, gr, h), d, gr, h, mrM, cdaM)
 }
 
 // CalcTimeF calculates the duration of a performance with PERF score s on a climb
 // of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for a female rider.
 func CalcTimeF(s, d, gr, h float64) float64 {
-	return rscore(s, twr(d, gr, h, mrF, cdaF, CpF))
+	return time_(CalcPowerF(s, d, gr, h), d, gr, h, mrF, cdaF)
 }
 
 // CalcPowerM calculates the power required for a performance with PERF score s on a
 // climb of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for the normalized model male rider.
 func CalcPowerM(s, d, gr, h float64) float64 {
-	return power(CalcTimeM(s, d, gr, h), d, gr, h, mrM, cdaM)
+	return rscore(s, pwr(d, gr, h, mrM, cdaM, CpM))
 }
 
 // CalcPowerF calculates the power required for a performance with PERF score s on a
 // climb of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for the normalized model female rider.
 func CalcPowerF(s, d, gr, h float64) float64 {
-	return power(CalcTimeF(s, d, gr, h), d, gr, h, mrF, cdaF)
+	return rscore(s, pwr(d, gr, h, mrF, cdaF, CpF))
+}
+
+func pwr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
+	return power(twr(d, gr, h, mr, cda, cp), d, gr, h, mr, cda)
 }
 
 func twr(d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
@@ -118,10 +122,14 @@ func power(t, d, gr, h, mr, cda float64) float64 {
 	return calc.Psimp(calc.Rho(h, calc.G), cda, calc.Crr, vg, vg, gr, mr+mb, calc.G, calc.Ec, calc.Fw)
 }
 
-func score(t, wr float64) float64 {
-	return 1000 * math.Pow(wr/t, 2)
+func time_(p, d, gr, h, mr, cda float64) float64 {
+	return calc.Time(p, d, calc.Rho(h, calc.G), cda, calc.Crr, 0, 0, 0, gr, mr+mb, calc.G, calc.Ec, calc.Fw)
+}
+
+func score(p, wr float64) float64 {
+	return 1000 * math.Pow(p/wr, 1.8)
 }
 
 func rscore(s, wr float64) float64 {
-	return math.Sqrt(1000 * math.Pow(wr, 2) / s)
+	return math.Pow(s*math.Pow(wr, 1.8)/1000, 1.0/1.8)
 }
