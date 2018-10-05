@@ -20,14 +20,21 @@ const cdaF = 0.300 // 1.67m
 // of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for a male rider.
 func CalcM(t, d, gr, h float64) float64 {
-	return score(power(t, d, gr, h, mrM, cdaM), calc.AltitudeAdjust(CpM(t), h))
+	return Calc(t, d, gr, h, mrM, cdaM, CpM)
 }
 
 // CalcF calculates the PERF score for a performance of duration t on a climb
 // of distance d in metres, gradient gr (rise/run) and median elevation h in
 // metres for a female rider.
 func CalcF(t, d, gr, h float64) float64 {
-	return score(power(t, d, gr, h, mrF, cdaF), calc.AltitudeAdjust(CpF(t), h))
+	return Calc(t, d, gr, h, mrF, cdaF, CpF)
+}
+
+// Calc calculates the PERF score for a performance of duration t on a climb
+// of distance d in metres, gradient gr (rise/run) and median elevation h in
+// metres for rider with mass mr in kg, cda, and power curve cp in watts.
+func Calc(t, d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
+	return score(power(t, d, gr, h, mr, cda), calc.AltitudeAdjust(cp(t), h))
 }
 
 // CpM returns the expected power maintable for a male rider during a world
@@ -86,6 +93,19 @@ func CalcPowerF(s, d, gr, h float64) float64 {
 	return rscore(s, d, gr, h, mrF, cdaF, CpF)
 }
 
+func power(t, d, gr, h, mr, cda float64) float64 {
+	vg := d / t
+	return calc.Psimp(calc.Rho(h, calc.G), cda, calc.Crr, vg, vg, gr, mr+mb, calc.G, calc.Ec, calc.Fw)
+}
+
+func time_(p, d, gr, h, mr, cda float64) float64 {
+	return calc.Time(p, d, calc.Rho(h, calc.G), cda, calc.Crr, 0, 0, 0, gr, mr+mb, calc.G, calc.Ec, calc.Fw)
+}
+
+func score(p, wr float64) float64 {
+	return 1000 * math.Pow(p/wr, 1.8)
+}
+
 func rscore(s, d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
 	// epsilon is some small value that determines when we will stop the search
 	const epsilon = 1e-6
@@ -112,17 +132,4 @@ func rscore(s, d, gr, h, mr, cda float64, cp func(float64) float64) float64 {
 	}
 
 	return p
-}
-
-func power(t, d, gr, h, mr, cda float64) float64 {
-	vg := d / t
-	return calc.Psimp(calc.Rho(h, calc.G), cda, calc.Crr, vg, vg, gr, mr+mb, calc.G, calc.Ec, calc.Fw)
-}
-
-func time_(p, d, gr, h, mr, cda float64) float64 {
-	return calc.Time(p, d, calc.Rho(h, calc.G), cda, calc.Crr, 0, 0, 0, gr, mr+mb, calc.G, calc.Ec, calc.Fw)
-}
-
-func score(p, wr float64) float64 {
-	return 1000 * math.Pow(p/wr, 1.8)
 }
